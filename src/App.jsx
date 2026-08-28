@@ -1,11 +1,14 @@
+import Header from "./components/Header/Header.jsx";
+import Main from "./components/Main/Main.jsx";
+import Footer from "./components/Footer/Footer.jsx";
 
 function App() {
 
   return (
     <>
-      <div className="test">
-        <h1 className="test-test">Привет</h1>
-      </div>
+      <Header />
+      <Main />
+      <Footer />
 
     </>
   )
