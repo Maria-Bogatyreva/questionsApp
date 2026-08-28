@@ -1,7 +1,7 @@
 import './main.scss'
 import Questions from "../Questions/Questions.jsx";
 import Filters from "../Filters/Filters.jsx";
-import QuestionProvider from "../../context/QuestionCotext.jsx";
+import QuestionProvider from "../../context/QuestionContext.jsx";
 export default function Main() {
   return (
     <>

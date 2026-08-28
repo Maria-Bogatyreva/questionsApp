@@ -1,6 +1,8 @@
 .header {
   background: var(--bg-color-accent);
-
+  position: sticky;
+  top: 0;
+  left: 0;
 
   &__inner {
     display: flex;

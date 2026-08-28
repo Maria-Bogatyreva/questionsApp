@@ -4,7 +4,7 @@ export const QuestionContext = createContext(null);
 
 const specializationUrl = "https://api.yeatwork.ru/specializations?limit=15"; //Специализация
 const skillsUrl = "https://api.yeatwork.ru/skills?limit=10"; // Навыки
-const questionsUrl = "https://api.yeatwork.ru/questions/public-questions?";
+const questionsUrl = "https://api.yeatwork.ru/questions/public-questions";
 
 const rating = [
   {
@@ -64,9 +64,11 @@ const status = [
 export default function QuestionProvider({children}) {
   const [specializations, setSpecialization] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [questions, setQuestions] = useState([])
 
+  // Фильтры
   useEffect(() => {
-    async function fetchData() {
+    async function fetchFiltersData() {
       try {
         const specializationsPromise = fetch(specializationUrl);
         const skillsPromise = fetch(skillsUrl);
@@ -99,14 +101,35 @@ export default function QuestionProvider({children}) {
         console.log(error.message)
 
       } finally {
-        console.log('загрузка завершена')
+        // console.log('загрузка завершена')
       }
     }
 
-    fetchData()
+    fetchFiltersData()
   }, []);
+
+  // Вопросы
+  useEffect(()=>{
+    async function fetchQuestionsData() {
+      try{
+        const response = await fetch(questionsUrl);
+        if (!response.ok) {
+          throw new Error(`Ошибка ${response.status}`)
+        }
+
+        const questionsAnswer = await response.json();
+
+        setQuestions(questionsAnswer.data)
+      } catch (error) {
+        console.log(error.message)
+      } finally {
+        console.log('загрузка завершена')
+      }
+    }
+    fetchQuestionsData();
+  }, [])
   return (
-    <QuestionContext.Provider value={{specializations, skills, status, rating, complexity}}>
+    <QuestionContext.Provider value={{questions, specializations, skills, status, rating, complexity}}>
       {children}
     </QuestionContext.Provider>
   )

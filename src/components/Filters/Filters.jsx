@@ -3,7 +3,7 @@ import Filter from "../Filter/Filter.jsx";
 
 import './filters.scss'
 import {useContext} from "react";
-import {QuestionContext} from "../../context/QuestionCotext.jsx";
+import {QuestionContext} from "../../context/QuestionContext.jsx";
 
 export default function Filters() {
   const {specializations, skills, status, rating, complexity} = useContext(QuestionContext);
