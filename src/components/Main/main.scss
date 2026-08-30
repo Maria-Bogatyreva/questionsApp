@@ -5,4 +5,14 @@
     align-items: flex-start;
     gap: 20px;
   }
+
+  &__questions {
+    flex-grow: 1;
+  }
+
+  &__filters {
+    min-width: 392px;
+    width: 392px;
+    height: auto;
+  }
 }
