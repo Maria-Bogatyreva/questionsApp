@@ -83,25 +83,6 @@ export default function QuestionProvider({children}) {
 
   const limit = 10
 
-  async function fetchQuestionsData(currentPage= 1) {
-    try{
-      const response = await fetch(`${questionsUrl}?page=${currentPage}&limit=${limit}`);
-      if (!response.ok) {
-        throw new Error(`Ошибка ${response.status}`)
-      }
-
-      const questionsAnswer = await response.json();
-      setQuestions(questionsAnswer.data)
-      setTotalPages(Math.ceil(questionsAnswer.total / limit))
-      console.log('questionsAnswer.total', questionsAnswer.total)
-
-    } catch (error) {
-      console.log(error.message)
-    } finally {
-      console.log('загрузка завершена')
-    }
-  }
-
   // Фильтры
   useEffect(() => {
     async function fetchFiltersData() {
@@ -146,8 +127,50 @@ export default function QuestionProvider({children}) {
 
   // Вопросы
   useEffect(()=>{
-    fetchQuestionsData(currentPage);
-  }, [currentPage])
+    async function fetchQuestions() {
+      const searchParams = new URLSearchParams({limit: limit, page: currentPage})
+
+      if (selectedSpecialization) {
+        searchParams.set('specializationId', selectedSpecialization)
+      }
+
+      if (selectedSkills.length) {
+        searchParams.set('skills', selectedSkills.join(','))
+      }
+
+      if (selectedRate.length) {
+        searchParams.set('rate', selectedRate.join(','))
+      }
+
+      if (selectedComplexity.length) {
+        const convertComplexityParams =
+          complexityData.filter(i => selectedComplexity.includes(i.id))
+                        .reduce((acc, element) => {
+                          acc.push(element.values);
+                          return acc}, [])
+                        .flat()
+        searchParams.set('complexity', convertComplexityParams.join(','))
+      }
+
+      try{
+        const response = await fetch(`${questionsUrl}?${searchParams}`);
+        if (!response.ok) {
+          throw new Error(`Ошибка ${response.status}`)
+        }
+
+        const result = await response.json();
+        setQuestions(result.data)
+        setTotalPages(Math.ceil(result.total / limit))
+
+      } catch (error) {
+        console.log(error.message)
+      } finally {
+        console.log('загрузка завершена')
+      }
+    }
+
+    fetchQuestions();
+  }, [currentPage, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate])
 
   function handleNextPage() {
     setCurrentPage(prev => prev + 1)
@@ -161,18 +184,19 @@ export default function QuestionProvider({children}) {
     setCurrentPage(pageNumber)
   }
 
-  function handleFilterChange(newValue, setter, multiple ) {
+  function handleFilterChange(newValue, setter, multiple) {
     if (!multiple) {
-      setter(newValue)
+      setter(prevState => (prevState === newValue ? null : newValue));
     } else {
       setter(prevState => {
         if (prevState.includes(newValue)) {
-          return prevState.filter(el => el!== newValue)
+          return prevState.filter(el => el !== newValue);
         } else {
-          return [...prevState, newValue]
+          return [...prevState, newValue];
         }
-      })
+      });
     }
+    setCurrentPage(1)
   }
 
   return (

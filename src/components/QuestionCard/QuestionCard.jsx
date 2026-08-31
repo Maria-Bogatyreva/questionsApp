@@ -23,11 +23,11 @@ export default function QuestionCard({question}) {
             <dl className="question-card__info">
               <div>
                 <dt>Рейтинг</dt>
-                <dd>4</dd>
+                <dd>{question.rate}</dd>
               </div>
               <div>
                 <dt>Сложность</dt>
-                <dd>10</dd>
+                <dd>{question.complexity}</dd>
               </div>
             </dl>
             <button  className="question-card__action-btn">
