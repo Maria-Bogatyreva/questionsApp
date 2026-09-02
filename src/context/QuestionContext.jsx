@@ -1,4 +1,5 @@
-import {createContext, useEffect, useState} from "react";
+import {createContext, useEffect, useRef, useState} from "react";
+import useDebounce from "../hooks/useDebounce.jsx";
 
 export const QuestionContext = createContext(null);
 
@@ -69,19 +70,18 @@ const statusData = [
 export default function QuestionProvider({children}) {
   const [questions, setQuestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(null)
-
+  const [totalPages, setTotalPages] = useState(null);
   const [specializations, setSpecializations] = useState([]);
   const [selectedSpecialization, setSelectedSpecialization] = useState(null);
-
   const [skills, setSkills] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
-
   const [selectedRate, setSelectedRate] = useState([]);
-
   const [selectedComplexity, setSelectedComplexity] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const limit = 10
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+  const prevSearchQuery  = useRef(debouncedSearchQuery);
 
   // Фильтры
   useEffect(() => {
@@ -126,7 +126,13 @@ export default function QuestionProvider({children}) {
   }, []);
 
   // Вопросы
-  useEffect(()=>{
+  useEffect(()=> {
+    if (prevSearchQuery.current !== debouncedSearchQuery) {
+      prevSearchQuery.current = debouncedSearchQuery;
+      setCurrentPage(1)
+      return;
+    }
+
     async function fetchQuestions() {
       const searchParams = new URLSearchParams({limit: limit, page: currentPage})
 
@@ -152,6 +158,10 @@ export default function QuestionProvider({children}) {
         searchParams.set('complexity', convertComplexityParams.join(','))
       }
 
+      if(debouncedSearchQuery.trim()) {
+        searchParams.set('titleOrDescription', debouncedSearchQuery.trim())
+      }
+
       try{
         const response = await fetch(`${questionsUrl}?${searchParams}`);
         if (!response.ok) {
@@ -170,7 +180,7 @@ export default function QuestionProvider({children}) {
     }
 
     fetchQuestions();
-  }, [currentPage, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate])
+  }, [currentPage, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
 
   function handleNextPage() {
     setCurrentPage(prev => prev + 1)
@@ -199,6 +209,10 @@ export default function QuestionProvider({children}) {
     setCurrentPage(1)
   }
 
+  function handleSearch(e) {
+    setSearchQuery(e.target.value)
+  }
+
   return (
     <QuestionContext.Provider value={{
       questions,
@@ -208,25 +222,22 @@ export default function QuestionProvider({children}) {
       handleNextPage,
       handlePrevPage,
       handlePageClick,
-
       specializations,
       selectedSpecialization,
       setSelectedSpecialization,
-
       skills,
       selectedSkills,
       setSelectedSkills,
-
       statusData,
-
       rateData,
       selectedRate,
       setSelectedRate,
-
       complexityData,
       selectedComplexity,
       setSelectedComplexity,
-      handleFilterChange
+      handleFilterChange,
+      searchQuery,
+      handleSearch
     }}>
       {children}
     </QuestionContext.Provider>

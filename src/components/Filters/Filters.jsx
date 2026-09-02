@@ -1,4 +1,4 @@
-import InputSearch from "../InputSearch/InputSearch.jsx";
+import Search from "../Search/Search.jsx";
 import Filter from "../Filter/Filter.jsx";
 
 import './filters.scss'
@@ -30,7 +30,7 @@ export default function Filters() {
   return (
     <div className="filters">
       <div className="filters__item">
-        <InputSearch />
+        <Search />
       </div>
       <div className="filters__item">
         <Filter filterName={'Специализация'} filterItems={specializations} selectedItem={selectedSpecialization} setFilterValue={setSelectedSpecialization} multiple={false}/>
