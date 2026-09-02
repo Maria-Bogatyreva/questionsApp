@@ -1,0 +1,50 @@
+.skeleton {
+  background: var(--bg-color-accent);
+  border-radius: 24px;
+  padding: 25px 20px 40px;
+
+  &__title {
+    width: 80%;
+    max-width: 80%;
+    height: 30px;
+    margin-bottom: 40px;
+    background: var(--text-color-6);
+    border-radius: 12px;
+  }
+
+  &__list li {
+    position: relative;
+    overflow: hidden;
+    height: 56px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 10px 0 rgba(106, 99, 118, 0.1019607843);
+    border-radius: 8px;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 150%;
+      background: linear-gradient(
+                      90deg,
+                      transparent,
+                      #F8F8F8,
+                      transparent
+      );
+      animation: shimmer 1.5s infinite;
+    }
+
+    &:last-child {margin-bottom: 0}
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
+}

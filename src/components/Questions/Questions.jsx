@@ -9,11 +9,16 @@ export default function Questions() {
   return (
     <div className="questions">
       <h1 className="questions__title">Вопросы {currentSpecialization?.title}</h1>
-      <ul className="questions__list">
-        {
-          questions.map(question => <li key={question.id}><QuestionCard question={question}/></li>)
-        }
-      </ul>
+      {
+        questions.length > 0 ?
+          <ul className="questions__list">
+            {
+              questions.map(question => <li key={question.id}><QuestionCard question={question}/></li>)
+            }
+          </ul>
+          :
+          <p>Ничего не найдено</p>
+      }
     </div>
   )
 }

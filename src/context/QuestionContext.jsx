@@ -78,6 +78,7 @@ export default function QuestionProvider({children}) {
   const [selectedRate, setSelectedRate] = useState([]);
   const [selectedComplexity, setSelectedComplexity] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
 
   const limit = 10
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -127,11 +128,16 @@ export default function QuestionProvider({children}) {
 
   // Вопросы
   useEffect(()=> {
-    if (prevSearchQuery.current !== debouncedSearchQuery) {
+    const isSearchChanged =
+      prevSearchQuery.current !== debouncedSearchQuery;
+
+    if (isSearchChanged) {
       prevSearchQuery.current = debouncedSearchQuery;
-      setCurrentPage(1)
-      return;
+      setCurrentPage(1);
     }
+
+    const controller = new AbortController();
+    const { signal } = controller;
 
     async function fetchQuestions() {
       const searchParams = new URLSearchParams({limit: limit, page: currentPage})
@@ -163,7 +169,8 @@ export default function QuestionProvider({children}) {
       }
 
       try{
-        const response = await fetch(`${questionsUrl}?${searchParams}`);
+        setIsLoading(true)
+        const response = await fetch(`${questionsUrl}?${searchParams}`, {signal});
         if (!response.ok) {
           throw new Error(`Ошибка ${response.status}`)
         }
@@ -173,13 +180,21 @@ export default function QuestionProvider({children}) {
         setTotalPages(Math.ceil(result.total / limit))
 
       } catch (error) {
-        console.log(error.message)
+        if (error.name === 'AbortError') {
+          console.log('Fetch successfully aborted');
+        } else {
+          console.error(error.message);
+        }
       } finally {
-        console.log('загрузка завершена')
+        setIsLoading(false)
       }
     }
 
     fetchQuestions();
+
+    return () => {
+      controller.abort();
+    }
   }, [currentPage, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
 
   function handleNextPage() {
@@ -237,7 +252,8 @@ export default function QuestionProvider({children}) {
       setSelectedComplexity,
       handleFilterChange,
       searchQuery,
-      handleSearch
+      handleSearch,
+      isLoading
     }}>
       {children}
     </QuestionContext.Provider>
