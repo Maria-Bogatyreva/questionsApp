@@ -99,7 +99,7 @@ export default function Footer() {
               </ul>
             </nav>
             <div className="footer__social">
-              <p>Ищите нас и в других соцсетях @yeahub_it</p>
+              <p className="_tablet _pk">Ищите нас и в других соцсетях @yeahub_it</p>
               <ul>
                 {
                   socialLinks.map(link => (
@@ -110,6 +110,7 @@ export default function Footer() {
                 }
               </ul>
             </div>
+            <p className="footer__social-notice _mob">Ищите нас и в других соцсетях @yeahub_it</p>
           </div>
         </div>
       </footer>

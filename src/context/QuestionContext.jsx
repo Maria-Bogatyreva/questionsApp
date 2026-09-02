@@ -180,13 +180,13 @@ export default function QuestionProvider({children}) {
         setTotalPages(Math.ceil(result.total / limit))
 
       } catch (error) {
-        if (error.name === 'AbortError') {
-          console.log('Fetch successfully aborted');
-        } else {
+        if (error.name !== 'AbortError') {
           console.error(error.message);
         }
       } finally {
-        setIsLoading(false)
+        if (!signal.aborted) {
+          setIsLoading(false)
+        }
       }
     }
 
