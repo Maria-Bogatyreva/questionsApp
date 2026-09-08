@@ -78,7 +78,8 @@ export default function QuestionProvider({children}) {
   const [selectedRate, setSelectedRate] = useState([]);
   const [selectedComplexity, setSelectedComplexity] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const limit = 10
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -169,7 +170,9 @@ export default function QuestionProvider({children}) {
       }
 
       try{
-        setIsLoading(true)
+        setIsLoading(true);
+        setError(null);
+        setQuestions([]);
         const response = await fetch(`${questionsUrl}?${searchParams}`, {signal});
         if (!response.ok) {
           throw new Error(`Ошибка ${response.status}`)
@@ -182,6 +185,8 @@ export default function QuestionProvider({children}) {
       } catch (error) {
         if (error.name !== 'AbortError') {
           console.error(error.message);
+          setError(error.message);
+          setQuestions([]);
         }
       } finally {
         if (!signal.aborted) {
@@ -253,7 +258,8 @@ export default function QuestionProvider({children}) {
       handleFilterChange,
       searchQuery,
       handleSearch,
-      isLoading
+      isLoading,
+      error
     }}>
       {children}
     </QuestionContext.Provider>

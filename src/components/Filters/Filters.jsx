@@ -52,7 +52,7 @@ export default function Filters({onClose}) {
       </div>
 
       <div className="filters__item">
-        <Filter filterName={'Статус'} filterItems={statusData} multiple/>
+        <Filter filterName={'Статус (заблокировано)'} filterItems={statusData} selectedItem={2} className={'_disabled'}/>
       </div>
 
     </div>

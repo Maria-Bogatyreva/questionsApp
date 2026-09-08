@@ -2,7 +2,7 @@ import './filter.scss'
 import {useContext, useState} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
 
-export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, setFilterValue
+export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, setFilterValue, className
 }) {
   const {handleFilterChange} = useContext(QuestionContext)
   const [isCollapsed, setIsExpanded] = useState(true);
@@ -28,7 +28,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
     return selectedItem === itemId;
   }
   return (
-    <div className="filter">
+    <div className={`filter ${className}`}>
       <div className="filter__title">{filterName}</div>
       <ul className="filter__list">
         {
