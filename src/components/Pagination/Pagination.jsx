@@ -111,7 +111,7 @@ export default function Pagination() {
           ) : (
             <a href="#!"
               key={page}
-              onClick={() => handlePageClick(page)}
+              onClick={(e) => handlePageClick(e, page)}
               className={`pagination__link trs ${page === currentPage ? '_active' : ''}`}
             >
               {page}

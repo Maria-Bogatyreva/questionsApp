@@ -8,7 +8,7 @@ export default function QuestionCard({question}) {
   const cleanAnswer = DOMPurify.sanitize(question.longAnswer);
 
   return (
-    <div className={`question-card ${isOpen && 'open'}`}>
+    <div className={`question-card ${isOpen ? 'open' : ''}`}>
       <div className="question-card__header" onClick={()=>setIsOpen(prev=>!prev)}>
         <h2 className="question-card__title">{question.title}</h2>
         <button className="question-card__show-btn trs">

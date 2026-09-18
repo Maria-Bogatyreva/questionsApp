@@ -9,7 +9,7 @@ export default function useDebounce(value, delay) {
     }, delay)
 
     return ()=>{
-      clearInterval(timeout)
+      clearTimeout(timeout)
     }
   }, [value, delay]);
 

@@ -2,14 +2,14 @@ import './filter.scss'
 import {useContext, useState} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
 
-export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, setFilterValue
+export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, setFilterValue, className=''
 }) {
   const {handleFilterChange} = useContext(QuestionContext)
   const [isCollapsed, setIsExpanded] = useState(true);
 
   const VISIBLE_COUNT = 5
   function handleImgFailed(e) {
-    e.currentTarget.src = '/images/skillImg.svg'
+    e.currentTarget.src = '/images/skillImg.png'
   }
 
   const visibleItems = isCollapsed ? filterItems.slice(0, VISIBLE_COUNT) : filterItems;
@@ -28,7 +28,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
     return selectedItem === itemId;
   }
   return (
-    <div className="filter">
+    <div className={`filter ${className}`}>
       <div className="filter__title">{filterName}</div>
       <ul className="filter__list">
         {
@@ -46,7 +46,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
       </ul>
       {hasMoreItems && <a href="#!"
                           className="filter__link link trs"
-                          onClick={()=>setIsExpanded(prev => !prev)}>
+                          onClick={(e)=> {e.preventDefault(); setIsExpanded(prev => !prev)}}>
                           {isCollapsed ? 'Посмотреть все' : 'Скрыть'}
                        </a>
       }
