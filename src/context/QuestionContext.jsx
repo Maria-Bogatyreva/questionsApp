@@ -1,11 +1,20 @@
 import {createContext, useEffect, useRef, useState} from "react";
 import useDebounce from "../hooks/useDebounce.jsx";
+import axios from "axios";
 
 export const QuestionContext = createContext(null);
 
-const specializationUrl = "https://api.yeatwork.ru/specializations?limit=15"; //Специализация
-const skillsUrl = "https://api.yeatwork.ru/skills?limit=10"; // Навыки
-const questionsUrl = "https://api.yeatwork.ru/questions/public-questions";
+
+const api = axios.create({
+  baseURL: 'https://api.yeatwork.ru/',
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+const specializationUrl = "/specializations?limit=15"; //Специализация
+const skillsUrl = "/skills?limit=10"; // Навыки
+const questionsUrl = "/questions/public-questions";
 
 const rateData = [
   {
@@ -89,31 +98,18 @@ export default function QuestionProvider({children}) {
   useEffect(() => {
     async function fetchFiltersData() {
       try {
-        const specializationsPromise = fetch(specializationUrl);
-        const skillsPromise = fetch(skillsUrl);
+        const specializationsPromise = api.get(specializationUrl);
+        const skillsPromise = api.get(skillsUrl);
 
-        const [specializationsResponse, skillsResponse] =
+
+        const [{data: specializations}, {data: skills}] =
           await Promise.all([
             specializationsPromise,
             skillsPromise
           ])
 
-        if (!specializationsResponse.ok) {
-          throw new Error(`Ошибка, ${specializationsResponse.status}`)
-        }
-
-        if (!skillsResponse.ok) {
-          throw new Error(`Ошибка, ${skillsResponse.status}`)
-        }
-
-        const [specializationsAnswer, skillsAnswer] =
-          await Promise.all([
-            specializationsResponse.json(),
-            skillsResponse.json()
-          ])
-
-        setSpecializations(specializationsAnswer.data)
-        setSkills(skillsAnswer.data)
+        setSpecializations(specializations.data)
+        setSkills(skills.data)
 
 
       } catch (error) {
@@ -173,17 +169,13 @@ export default function QuestionProvider({children}) {
         setIsLoading(true);
         setError(null);
         setQuestions([]);
-        const response = await fetch(`${questionsUrl}?${searchParams}`, {signal});
-        if (!response.ok) {
-          throw new Error(`Ошибка ${response.status}`)
-        }
+        const {data:result} = await api.get(`${questionsUrl}?${searchParams}`, {signal});
 
-        const result = await response.json();
         setQuestions(result.data)
         setTotalPages(Math.ceil(result.total / limit))
 
       } catch (error) {
-        if (error.name !== 'AbortError') {
+        if (!axios.isCancel(error)) {
           console.error(error.message);
           setError(error.message);
           setQuestions([]);
