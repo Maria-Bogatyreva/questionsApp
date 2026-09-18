@@ -1,12 +1,12 @@
 import './main.scss'
-import Questions from "../Questions/Questions.jsx";
-import Filters from "../Filters/Filters.jsx";
+import Questions from "../../components/Questions/Questions.jsx";
+import Filters from "../../components/Filters/Filters.jsx";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
-import Pagination from "../Pagination/Pagination.jsx";
+import Pagination from "../../components/Pagination/Pagination.jsx";
 import {useContext, useState} from "react";
-import Skeleton from "../Skeleton/Skeleton.jsx";
+import Skeleton from "../../components/Skeleton/Skeleton.jsx";
 
-export default function Main() {
+export default function QuestionsPage() {
   const {isLoading} = useContext(QuestionContext);
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 

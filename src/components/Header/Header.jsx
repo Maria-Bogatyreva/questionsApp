@@ -1,4 +1,5 @@
 import './header.scss'
+import {Link} from "react-router-dom";
 
 const headerNavLinks = [
   {
@@ -28,7 +29,7 @@ export default function Header() {
       <header className="header">
         <div className="container">
           <div className="header__inner">
-            <a href="#!" className="header__logo">
+            <Link to={'/'} className="header__logo">
               <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="16.5" cy="16.5" r="16.5" fill="#4600E9"/>
                 <path fillRule="evenodd" clipRule="evenodd" d="M26.8566 12.329C26.1873 12.7869 25.7631 13.3329 25.5909 13.9579C25.4905 14.3221 25.4558 14.6771 25.5169 14.7149C25.6108 14.7729 26.2449 14.4152 26.5437 14.1357C26.8673 13.833 27.1206 13.4043 27.2347 12.9659C27.3085 12.6827 27.3312 12.0728 27.2679 12.0728C27.2476 12.0728 27.0625 12.1881 26.8566 12.329ZM25.7985 14.1139C25.7631 14.0872 25.934 13.7611 26.0376 13.6575C26.2177 13.4774 26.2096 13.5189 26.0035 13.8334C25.8985 13.9936 25.8063 14.1198 25.7985 14.1139Z" fill="white"/>
@@ -54,7 +55,7 @@ export default function Header() {
 
 
 
-            </a>
+            </Link>
             <nav className="header__nav">
               <div className="header__nav-selected">
                 <span>Подготовка</span>
