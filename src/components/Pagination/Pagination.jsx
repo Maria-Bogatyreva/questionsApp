@@ -3,12 +3,12 @@ import {QuestionContext} from "../../context/QuestionContext.jsx";
 import './pagination.scss'
 
 export default function Pagination() {
-  const {currentPage, handleNextPage, handlePrevPage, handlePageClick, totalPages} = useContext(QuestionContext);
+  const {page, handleNextPage, handlePrevPage, handlePageClick, totalPages} = useContext(QuestionContext);
 
   if (!totalPages) return null;
 
   function paginationTemplate(
-    currentPage,
+    page,
     totalPages,
     siblingCount = 1,
     edgePageCount = 6
@@ -21,20 +21,20 @@ export default function Pagination() {
     }
 
     const leftBound = Math.max(
-      currentPage - siblingCount,
+      page - siblingCount,
       1
     );
 
     const rightBound = Math.min(
-      currentPage + siblingCount,
+      page + siblingCount,
       totalPages
     );
 
     const isNearStart =
-      currentPage <= edgePageCount - siblingCount;
+      page <= edgePageCount - siblingCount;
 
     const isNearEnd =
-      currentPage >=
+      page >=
       totalPages - (edgePageCount - siblingCount) + 1;
 
     const finalLeftBound = isNearEnd
@@ -89,11 +89,11 @@ export default function Pagination() {
     return result;
   }
 
-  const pages = paginationTemplate(currentPage, totalPages);
+  const pages = paginationTemplate(+page, totalPages);
 
   return (
     <div className="pagination">
-      {currentPage > 1 &&
+      {page > 1 &&
         <a href="#!" onClick={handlePrevPage} className="pagination__btn">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" stroke="currentColor"/>
@@ -105,23 +105,23 @@ export default function Pagination() {
       }
 
       <div className="pagination__list">
-        {pages.map((page, index) =>
-          page === '...' ? (
+        {pages.map((pageNumber, index) =>
+          pageNumber === '...' ? (
             <span key={`dots-${index}`}>...</span>
           ) : (
             <a href="#!"
-              key={page}
-              onClick={(e) => handlePageClick(e, page)}
-              className={`pagination__link trs ${page === currentPage ? '_active' : ''}`}
+              key={pageNumber}
+              onClick={(e) => handlePageClick(e, pageNumber)}
+              className={`pagination__link trs ${pageNumber === +page ? '_active' : ''}`}
             >
-              {page}
+              {pageNumber}
             </a>
           )
         )}
 
       </div>
       {
-        currentPage < totalPages &&
+        page < totalPages &&
         <a href="#!" onClick={handleNextPage} className="pagination__btn">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="-0.5" width="27" height="27" rx="13.5"

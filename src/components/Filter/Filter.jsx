@@ -25,7 +25,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
       return selectedItem.includes(itemId);
     }
     // Если selectedItem - строка или число (для одиночных фильтров)
-    return selectedItem === itemId;
+    return Number(selectedItem) === itemId;
   }
   return (
     <div className={`filter ${className}`}>

@@ -8,7 +8,7 @@ import {QuestionContext} from "../../context/QuestionContext.jsx";
 export default function Filters({onClose}) {
   const {
     specializations,
-    selectedSpecialization,
+    specializationId,
     setSelectedSpecialization,
     skills,
     selectedSkills,
@@ -36,7 +36,7 @@ export default function Filters({onClose}) {
         <Search />
       </div>
       <div className="filters__item">
-        <Filter filterName={'Специализация'} filterItems={specializations} selectedItem={selectedSpecialization} setFilterValue={setSelectedSpecialization} multiple={false}/>
+        <Filter filterName={'Специализация'} filterItems={specializations} selectedItem={specializationId} multiple={false}/>
       </div>
 
       <div className="filters__item">

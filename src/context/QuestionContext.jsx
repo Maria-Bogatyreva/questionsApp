@@ -2,6 +2,7 @@ import {createContext, useEffect, useRef, useState} from "react";
 import useDebounce from "../hooks/useDebounce.jsx";
 import {api} from "../api.js";
 import axios from "axios";
+import {useSearchParams} from "react-router-dom";
 
 export const QuestionContext = createContext(null);
 
@@ -70,18 +71,21 @@ const statusData = [
 ]
 
 export default function QuestionProvider({children}) {
+  const [params, setSearchParams] = useSearchParams();
   const [questions, setQuestions] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [specializations, setSpecializations] = useState([]);
-  const [selectedSpecialization, setSelectedSpecialization] = useState(null);
   const [skills, setSkills] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedRate, setSelectedRate] = useState([]);
   const [selectedComplexity, setSelectedComplexity] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => params.get('search') || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const page = params.get('page') || '1';
+  const specializationId = params.get('specializationId') || '';
+
 
   const limit = 10
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -123,17 +127,27 @@ export default function QuestionProvider({children}) {
 
     if (isSearchChanged) {
       prevSearchQuery.current = debouncedSearchQuery;
-      setCurrentPage(1);
+      setSearchParams(prev => {
+        prev.set('page', 1);
+
+        if(debouncedSearchQuery.trim().length) {
+          prev.set('search', debouncedSearchQuery);
+        } else {
+          prev.delete('search');
+        }
+
+        return prev;
+      })
     }
 
     const controller = new AbortController();
     const { signal } = controller;
 
     async function fetchQuestions() {
-      const searchParams = new URLSearchParams({limit: limit, page: currentPage})
+      const searchParams = new URLSearchParams({limit: limit, page: page})
 
-      if (selectedSpecialization) {
-        searchParams.set('specializationId', selectedSpecialization)
+      if (specializationId) {
+        searchParams.set('specializationId', specializationId)
       }
 
       if (selectedSkills.length) {
@@ -185,26 +199,43 @@ export default function QuestionProvider({children}) {
     return () => {
       controller.abort();
     }
-  }, [currentPage, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
+  }, [page, specializationId, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
 
   function handleNextPage(e) {
     e.preventDefault();
-    setCurrentPage(prev => prev + 1)
+    setSearchParams(prev => {
+      prev.set('page', Number(page) + 1);
+      return prev;
+    })
   }
 
   function handlePrevPage(e) {
     e.preventDefault();
-    setCurrentPage(prev => prev - 1)
+    setSearchParams(prev => {
+      prev.set('page', Number(page) - 1);
+      return prev;
+    })
   }
 
   function handlePageClick (e, pageNumber) {
     e.preventDefault();
-    setCurrentPage(pageNumber)
+    setSearchParams(prev => {
+      prev.set('page', Number(pageNumber));
+      return prev;
+    })
   }
 
   function handleFilterChange(newValue, setter, multiple) {
     if (!multiple) {
-      setter(prevState => (prevState === newValue ? null : newValue));
+      setSearchParams(prev => {
+        prev.set('page', 1);
+        if (newValue !== Number(specializationId)) {
+          prev.set('specializationId', newValue)
+        } else {
+          prev.delete('specializationId')
+        }
+        return prev;
+      })
     } else {
       setter(prevState => {
         if (prevState.includes(newValue)) {
@@ -214,25 +245,22 @@ export default function QuestionProvider({children}) {
         }
       });
     }
-    setCurrentPage(1)
   }
 
   function handleSearch(e) {
-    setSearchQuery(e.target.value)
+    setSearchQuery(e.target.value);
   }
 
   return (
     <QuestionContext.Provider value={{
       questions,
-      currentPage,
-      setCurrentPage,
+      page,
       totalPages,
       handleNextPage,
       handlePrevPage,
       handlePageClick,
       specializations,
-      selectedSpecialization,
-      setSelectedSpecialization,
+      specializationId,
       skills,
       selectedSkills,
       setSelectedSkills,
