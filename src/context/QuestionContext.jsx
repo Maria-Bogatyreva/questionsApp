@@ -1,17 +1,10 @@
 import {createContext, useEffect, useRef, useState} from "react";
 import useDebounce from "../hooks/useDebounce.jsx";
+import {api} from "../api.js";
 import axios from "axios";
 
 export const QuestionContext = createContext(null);
 
-
-const api = axios.create({
-  baseURL: 'https://api.yeatwork.ru/',
-  timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
 const specializationUrl = "/specializations?limit=15"; //Специализация
 const skillsUrl = "/skills?limit=10"; // Навыки
 const questionsUrl = "/questions/public-questions";

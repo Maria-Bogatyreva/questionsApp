@@ -1,6 +1,7 @@
 import './filter.scss'
 import {useContext, useState} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
+import {handleImgFailed} from "../../utils.js";
 
 export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, setFilterValue, className=''
 }) {
@@ -8,9 +9,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
   const [isCollapsed, setIsExpanded] = useState(true);
 
   const VISIBLE_COUNT = 5
-  function handleImgFailed(e) {
-    e.currentTarget.src = '/images/skillImg.png'
-  }
+
 
   const visibleItems = isCollapsed ? filterItems.slice(0, VISIBLE_COUNT) : filterItems;
 
@@ -19,6 +18,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
   function handleClick(newValue) {
     handleFilterChange(newValue, setFilterValue, multiple)
   }
+
   function isItemActive(itemId) {
     // Если selectedItem - массив (для multiple фильтров)
     if (Array.isArray(selectedItem)) {
@@ -38,7 +38,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
               onClick={()=>handleClick(item.id)}
               className={isItemActive(item.id) ? '_active' : ''}
             >
-              {hasIcon && <img alt="" src={item.imageSrc} onError={handleImgFailed}/>}
+              {hasIcon && <img alt="" src={item.imageSrc} onError={(e) => handleImgFailed(e, '/images/skillImg.png')}/>}
               {item.title}
             </li>)
           )

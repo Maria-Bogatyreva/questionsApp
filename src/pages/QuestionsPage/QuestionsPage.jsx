@@ -1,4 +1,4 @@
-import './main.scss'
+import './questionsPage.scss'
 import Questions from "../../components/Questions/Questions.jsx";
 import Filters from "../../components/Filters/Filters.jsx";
 import {QuestionContext} from "../../context/QuestionContext.jsx";

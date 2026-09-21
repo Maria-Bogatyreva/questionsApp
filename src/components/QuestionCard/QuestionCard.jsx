@@ -1,12 +1,10 @@
 import './questionCard.scss'
 import {useState} from "react";
 import DOMPurify from 'dompurify';
+import {Link} from "react-router-dom";
 
 export default function QuestionCard({question}) {
   const [isOpen, setIsOpen] = useState(false);
-
-  const cleanAnswer = DOMPurify.sanitize(question.longAnswer);
-
   return (
     <div className={`question-card ${isOpen ? 'open' : ''}`}>
       <div className="question-card__header" onClick={()=>setIsOpen(prev=>!prev)}>
@@ -40,9 +38,8 @@ export default function QuestionCard({question}) {
               </svg>
             </button>
           </div>
-          <div className="question-card__content-bottom" dangerouslySetInnerHTML={{ __html: cleanAnswer }}>
-
-          </div>
+          <div className="question-card__content-bottom" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(question.shortAnswer) }}></div>
+        <Link to={`/questions/${question.id}`}>Подробнее</Link>
         </div>
       }
     </div>
