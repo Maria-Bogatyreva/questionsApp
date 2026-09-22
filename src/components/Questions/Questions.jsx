@@ -4,7 +4,7 @@ import {QuestionContext} from "../../context/QuestionContext.jsx";
 import QuestionCard from "../QuestionCard/QuestionCard.jsx";
 export default function Questions() {
   const {questions, specializations, selectedSpecialization, error} = useContext(QuestionContext);
-  const currentSpecialization = specializations.find(item => item.id === selectedSpecialization);
+  const currentSpecialization = specializations.find(item => item.id === Number(selectedSpecialization));
 
   if (error) {
     return (
