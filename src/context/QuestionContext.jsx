@@ -1,4 +1,4 @@
-import {createContext, useEffect, useRef, useState} from "react";
+import {createContext, useEffect, useMemo, useRef, useState} from "react";
 import useDebounce from "../hooks/useDebounce.jsx";
 import {api} from "../api.js";
 import axios from "axios";
@@ -72,24 +72,32 @@ const statusData = [
 
 export default function QuestionProvider({children}) {
   const [params, setSearchParams] = useSearchParams();
+
   const [questions, setQuestions] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
   const [specializations, setSpecializations] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const [selectedRate, setSelectedRate] = useState([]);
-  const [selectedComplexity, setSelectedComplexity] = useState([]);
   const [searchQuery, setSearchQuery] = useState(() => params.get('search') || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const page = params.get('page') || '1';
-  const specializationId = params.get('specializationId') || '';
+  function getArrayParam(params, paramName) {
+    const value = params.get(paramName);
+    if (value === null) {
+      return [];
+    }
+    return value.split(',').map(Number);
+  }
 
+  const page = params.get('page') || '1';
+  const selectedSpecialization = params.get('specializationId') || '';
+  const selectedSkills = useMemo(() => getArrayParam(params, 'skills'), [params]);
+  const selectedRate = useMemo(() => getArrayParam(params, 'rate'), [params]);
+  const selectedComplexity = useMemo(() => getArrayParam(params, 'complexity'), [params]);
 
   const limit = 10
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const prevSearchQuery  = useRef(debouncedSearchQuery);
+  const prevSearchQuery = useRef(debouncedSearchQuery);
 
   // Фильтры
   useEffect(() => {
@@ -121,7 +129,7 @@ export default function QuestionProvider({children}) {
   }, []);
 
   // Вопросы
-  useEffect(()=> {
+  useEffect(() => {
     const isSearchChanged =
       prevSearchQuery.current !== debouncedSearchQuery;
 
@@ -130,7 +138,7 @@ export default function QuestionProvider({children}) {
       setSearchParams(prev => {
         prev.set('page', 1);
 
-        if(debouncedSearchQuery.trim().length) {
+        if (debouncedSearchQuery.trim().length) {
           prev.set('search', debouncedSearchQuery);
         } else {
           prev.delete('search');
@@ -141,13 +149,13 @@ export default function QuestionProvider({children}) {
     }
 
     const controller = new AbortController();
-    const { signal } = controller;
+    const {signal} = controller;
 
     async function fetchQuestions() {
       const searchParams = new URLSearchParams({limit: limit, page: page})
 
-      if (specializationId) {
-        searchParams.set('specializationId', specializationId)
+      if (selectedSpecialization) {
+        searchParams.set('specializationId', selectedSpecialization)
       }
 
       if (selectedSkills.length) {
@@ -161,22 +169,23 @@ export default function QuestionProvider({children}) {
       if (selectedComplexity.length) {
         const convertComplexityParams =
           complexityData.filter(i => selectedComplexity.includes(i.id))
-                        .reduce((acc, element) => {
-                          acc.push(element.values);
-                          return acc}, [])
-                        .flat()
+            .reduce((acc, element) => {
+              acc.push(element.values);
+              return acc
+            }, [])
+            .flat()
         searchParams.set('complexity', convertComplexityParams.join(','))
       }
 
-      if(debouncedSearchQuery.trim()) {
+      if (debouncedSearchQuery.trim()) {
         searchParams.set('titleOrDescription', debouncedSearchQuery.trim())
       }
 
-      try{
+      try {
         setIsLoading(true);
         setError(null);
         setQuestions([]);
-        const {data:result} = await api.get(`${questionsUrl}?${searchParams}`, {signal});
+        const {data: result} = await api.get(`${questionsUrl}?${searchParams}`, {signal});
 
         setQuestions(result.data)
         setTotalPages(Math.ceil(result.total / limit))
@@ -199,7 +208,7 @@ export default function QuestionProvider({children}) {
     return () => {
       controller.abort();
     }
-  }, [page, specializationId, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
+  }, [page, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
 
   function handleNextPage(e) {
     e.preventDefault();
@@ -217,7 +226,7 @@ export default function QuestionProvider({children}) {
     })
   }
 
-  function handlePageClick (e, pageNumber) {
+  function handlePageClick(e, pageNumber) {
     e.preventDefault();
     setSearchParams(prev => {
       prev.set('page', Number(pageNumber));
@@ -225,11 +234,11 @@ export default function QuestionProvider({children}) {
     })
   }
 
-  function handleFilterChange(newValue, setter, multiple) {
+  function handleFilterChange(newValue, paramName, multiple) {
     if (!multiple) {
       setSearchParams(prev => {
         prev.set('page', 1);
-        if (newValue !== Number(specializationId)) {
+        if (newValue !== Number(selectedSpecialization)) {
           prev.set('specializationId', newValue)
         } else {
           prev.delete('specializationId')
@@ -237,12 +246,15 @@ export default function QuestionProvider({children}) {
         return prev;
       })
     } else {
-      setter(prevState => {
-        if (prevState.includes(newValue)) {
-          return prevState.filter(el => el !== newValue);
-        } else {
-          return [...prevState, newValue];
-        }
+      const current = params.get(paramName)?.split(',').map(Number) ?? [];
+      const updated = current.includes(newValue)
+        ? current.filter(v => v !== newValue)
+        : [...current, newValue];
+
+      setSearchParams(prev => {
+        prev.set('page', 1);
+        updated.length ? prev.set(paramName, updated.join(',')) : prev.delete(paramName);
+        return prev;
       });
     }
   }
@@ -260,17 +272,14 @@ export default function QuestionProvider({children}) {
       handlePrevPage,
       handlePageClick,
       specializations,
-      specializationId,
+      selectedSpecialization,
       skills,
       selectedSkills,
-      setSelectedSkills,
       statusData,
       rateData,
       selectedRate,
-      setSelectedRate,
       complexityData,
       selectedComplexity,
-      setSelectedComplexity,
       handleFilterChange,
       searchQuery,
       handleSearch,

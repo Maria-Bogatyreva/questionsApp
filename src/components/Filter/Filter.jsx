@@ -3,7 +3,7 @@ import {useContext, useState} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
 import {handleImgFailed} from "../../utils.js";
 
-export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, setFilterValue, className=''
+export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, filterParam, className=''
 }) {
   const {handleFilterChange} = useContext(QuestionContext)
   const [isCollapsed, setIsExpanded] = useState(true);
@@ -16,7 +16,7 @@ export default function Filter({filterName, filterItems=[], selectedItem, hasIco
   const hasMoreItems = filterItems.length > VISIBLE_COUNT;
 
   function handleClick(newValue) {
-    handleFilterChange(newValue, setFilterValue, multiple)
+    handleFilterChange(newValue, filterParam, multiple)
   }
 
   function isItemActive(itemId) {

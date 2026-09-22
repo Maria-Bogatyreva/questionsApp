@@ -8,18 +8,14 @@ import {QuestionContext} from "../../context/QuestionContext.jsx";
 export default function Filters({onClose}) {
   const {
     specializations,
-    specializationId,
-    setSelectedSpecialization,
+    selectedSpecialization,
     skills,
     selectedSkills,
-    setSelectedSkills,
     statusData,
     rateData,
     selectedRate,
-    setSelectedRate,
     complexityData,
     selectedComplexity,
-    setSelectedComplexity,
   } = useContext(QuestionContext);
 
   return (
@@ -36,19 +32,19 @@ export default function Filters({onClose}) {
         <Search />
       </div>
       <div className="filters__item">
-        <Filter filterName={'Специализация'} filterItems={specializations} selectedItem={specializationId} multiple={false}/>
+        <Filter filterName={'Специализация'} filterItems={specializations} selectedItem={selectedSpecialization} multiple={false}/>
       </div>
 
       <div className="filters__item">
-        <Filter filterName={'Навыки'} filterItems={skills} selectedItem={selectedSkills} setFilterValue={setSelectedSkills} hasIcon multiple  />
+        <Filter filterName={'Навыки'} filterItems={skills} selectedItem={selectedSkills} filterParam="skills" hasIcon multiple  />
       </div>
 
       <div className="filters__item">
-        <Filter filterName={'Уровень сложности'} filterItems={complexityData} selectedItem={selectedComplexity} setFilterValue={setSelectedComplexity}  multiple/>
+        <Filter filterName={'Уровень сложности'} filterItems={complexityData} selectedItem={selectedComplexity} filterParam="complexity"  multiple/>
       </div>
 
       <div className="filters__item">
-        <Filter filterName={'Рейтинг'} filterItems={rateData} selectedItem={selectedRate}  setFilterValue={setSelectedRate} multiple/>
+        <Filter filterName={'Рейтинг'} filterItems={rateData} selectedItem={selectedRate}  filterParam="rate" multiple/>
       </div>
 
       <div className="filters__item">
