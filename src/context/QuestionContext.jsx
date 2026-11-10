@@ -3,70 +3,12 @@ import useDebounce from "../hooks/useDebounce.jsx";
 import {api} from "../api.js";
 import axios from "axios";
 import {useSearchParams} from "react-router-dom";
+import {complexityData} from "../constants/questionFilters.js";
 
 export const QuestionContext = createContext(null);
 
 const questionsUrl = "/questions/public-questions";
 
-const rateData = [
-  {
-    id: 1,
-    title: '1'
-  },
-  {
-    id: 2,
-    title: '2'
-  },
-  {
-    id: 3,
-    title: '3'
-  },
-  {
-    id: 4,
-    title: '4'
-  },
-  {
-    id: 5,
-    title: '5'
-  }
-]
-const complexityData = [
-  {
-    id: 0,
-    values: [1, 2, 3],
-    title: '1-3'
-  },
-  {
-    id: 1,
-    values: [4, 5, 6],
-    title: '4-6'
-  },
-  {
-
-    id: 2,
-    values: [7, 8],
-    title: '7-8'
-  },
-  {
-    id: 3,
-    values: [9, 10],
-    title: '9-10'
-  }
-]
-const statusData = [
-  {
-    id: 0,
-    title: 'Изученные'
-  },
-  {
-    id: 1,
-    title: 'Не изученные'
-  },
-  {
-    id: 2,
-    title: 'Все'
-  }
-]
 
 export default function QuestionProvider({children}) {
   const [params, setSearchParams] = useSearchParams();
@@ -154,8 +96,6 @@ export default function QuestionProvider({children}) {
         setQuestions([]);
         const {data: result} = await api.get(`${questionsUrl}?${searchParams}`, {signal});
 
-        console.log(result)
-
         setQuestions(result.data)
         setTotalPages(Math.ceil(result.total / limit))
 
@@ -242,10 +182,7 @@ export default function QuestionProvider({children}) {
       handlePageClick,
       selectedSpecialization,
       selectedSkills,
-      statusData,
-      rateData,
       selectedRate,
-      complexityData,
       selectedComplexity,
       handleFilterChange,
       searchQuery,

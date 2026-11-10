@@ -5,15 +5,13 @@ import './filters.scss'
 import {useContext} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
 import {useGetSkillsQuery, useGetSpecializationsQuery} from "../../services/questionsApi.js";
+import {complexityData, rateData, statusData} from "../../constants/questionFilters.js";
 
 export default function Filters({onClose}) {
   const {
     selectedSpecialization,
     selectedSkills,
-    statusData,
-    rateData,
     selectedRate,
-    complexityData,
     selectedComplexity,
   } = useContext(QuestionContext);
 
