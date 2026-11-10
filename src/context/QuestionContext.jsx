@@ -1,9 +1,9 @@
-import {createContext, useEffect, useRef, useState} from "react";
-import useDebounce from "../hooks/useDebounce.jsx";
+import {createContext, useEffect, useState} from "react";
 import {api} from "../api.js";
 import axios from "axios";
 import {complexityData} from "../constants/questionFilters.js";
 import useQuestionParams from "../hooks/useQuestionParams.js";
+import useQuestionSearch from "../hooks/useQuestionSearch.js";
 
 export const QuestionContext = createContext(null);
 
@@ -11,8 +11,6 @@ const questionsUrl = "/questions/public-questions";
 
 export default function QuestionProvider({children}) {
   const {
-    params,
-    setSearchParams,
     page,
     selectedSpecialization,
     selectedSkills,
@@ -20,36 +18,22 @@ export default function QuestionProvider({children}) {
     selectedComplexity,
   } = useQuestionParams();
 
+  const {
+    searchQuery,
+    handleSearch,
+    debouncedSearchQuery
+  } = useQuestionSearch()
+
   const [questions, setQuestions] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(() => params.get('search') || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const limit = 10
-  const debouncedSearchQuery = useDebounce(searchQuery, 500);
-  const prevSearchQuery = useRef(debouncedSearchQuery);
+
 
   // Вопросы
   useEffect(() => {
-    const isSearchChanged =
-      prevSearchQuery.current !== debouncedSearchQuery;
-
-    if (isSearchChanged) {
-      prevSearchQuery.current = debouncedSearchQuery;
-      setSearchParams(prev => {
-        prev.set('page', 1);
-
-        if (debouncedSearchQuery.trim().length) {
-          prev.set('search', debouncedSearchQuery);
-        } else {
-          prev.delete('search');
-        }
-
-        return prev;
-      })
-    }
-
     const controller = new AbortController();
     const {signal} = controller;
 
@@ -110,18 +94,14 @@ export default function QuestionProvider({children}) {
     return () => {
       controller.abort();
     }
-  }, [page, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
-
-  function handleSearch(e) {
-    setSearchQuery(e.target.value);
-  }
+  }, [page, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate,debouncedSearchQuery])
 
   return (
     <QuestionContext.Provider value={{
-      questions,
-      totalPages,
       searchQuery,
       handleSearch,
+      questions,
+      totalPages,
       isLoading,
       error
     }}>
