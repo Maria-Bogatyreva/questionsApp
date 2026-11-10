@@ -1,9 +1,11 @@
 import {useContext} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
 import './pagination.scss'
+import useQuestionParams from "../../hooks/useQuestionParams.js";
 
 export default function Pagination() {
-  const {page, handleNextPage, handlePrevPage, handlePageClick, totalPages} = useContext(QuestionContext);
+  const {totalPages} = useContext(QuestionContext);
+  const {page, handleNextPage, handlePrevPage, handlePageClick} = useQuestionParams();
 
   if (!totalPages) return null;
 

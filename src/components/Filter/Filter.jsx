@@ -1,11 +1,11 @@
 import './filter.scss'
-import {useContext, useState} from "react";
-import {QuestionContext} from "../../context/QuestionContext.jsx";
+import {useState} from "react";
 import {handleImgFailed} from "../../utils.js";
+import useQuestionParams from "../../hooks/useQuestionParams.js";
 
 export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, filterParam, className=''
 }) {
-  const {handleFilterChange} = useContext(QuestionContext)
+  const {handleFilterChange} = useQuestionParams()
   const [isCollapsed, setIsExpanded] = useState(true);
 
   const VISIBLE_COUNT = 5

@@ -3,8 +3,10 @@ import {useContext} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
 import QuestionCard from "../QuestionCard/QuestionCard.jsx";
 import {useGetSpecializationsQuery} from "../../services/questionsApi.js";
+import useQuestionParams from "../../hooks/useQuestionParams.js";
 export default function Questions() {
-  const {questions, selectedSpecialization, error} = useContext(QuestionContext);
+  const {questions, error} = useContext(QuestionContext);
+  const {selectedSpecialization} = useQuestionParams();
   const {data: specializations = []} = useGetSpecializationsQuery();
 
   const currentSpecialization = specializations.find(item => item.id === Number(selectedSpecialization));

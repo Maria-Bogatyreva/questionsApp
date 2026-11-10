@@ -1,37 +1,30 @@
-import {createContext, useEffect, useMemo, useRef, useState} from "react";
+import {createContext, useEffect, useRef, useState} from "react";
 import useDebounce from "../hooks/useDebounce.jsx";
 import {api} from "../api.js";
 import axios from "axios";
-import {useSearchParams} from "react-router-dom";
 import {complexityData} from "../constants/questionFilters.js";
+import useQuestionParams from "../hooks/useQuestionParams.js";
 
 export const QuestionContext = createContext(null);
 
 const questionsUrl = "/questions/public-questions";
 
-
 export default function QuestionProvider({children}) {
-  const [params, setSearchParams] = useSearchParams();
+  const {
+    params,
+    setSearchParams,
+    page,
+    selectedSpecialization,
+    selectedSkills,
+    selectedRate,
+    selectedComplexity,
+  } = useQuestionParams();
 
   const [questions, setQuestions] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
   const [searchQuery, setSearchQuery] = useState(() => params.get('search') || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  function getArrayParam(params, paramName) {
-    const value = params.get(paramName);
-    if (value === null) {
-      return [];
-    }
-    return value.split(',').map(Number);
-  }
-
-  const page = params.get('page') || '1';
-  const selectedSpecialization = params.get('specializationId') || '';
-  const selectedSkills = useMemo(() => getArrayParam(params, 'skills'), [params]);
-  const selectedRate = useMemo(() => getArrayParam(params, 'rate'), [params]);
-  const selectedComplexity = useMemo(() => getArrayParam(params, 'complexity'), [params]);
 
   const limit = 10
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -119,55 +112,6 @@ export default function QuestionProvider({children}) {
     }
   }, [page, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate, debouncedSearchQuery])
 
-  function handleNextPage(e) {
-    e.preventDefault();
-    setSearchParams(prev => {
-      prev.set('page', Number(page) + 1);
-      return prev;
-    })
-  }
-
-  function handlePrevPage(e) {
-    e.preventDefault();
-    setSearchParams(prev => {
-      prev.set('page', Number(page) - 1);
-      return prev;
-    })
-  }
-
-  function handlePageClick(e, pageNumber) {
-    e.preventDefault();
-    setSearchParams(prev => {
-      prev.set('page', Number(pageNumber));
-      return prev;
-    })
-  }
-
-  function handleFilterChange(newValue, paramName, multiple) {
-    if (!multiple) {
-      setSearchParams(prev => {
-        prev.set('page', 1);
-        if (newValue !== Number(selectedSpecialization)) {
-          prev.set('specializationId', newValue)
-        } else {
-          prev.delete('specializationId')
-        }
-        return prev;
-      })
-    } else {
-      const current = params.get(paramName)?.split(',').map(Number) ?? [];
-      const updated = current.includes(newValue)
-        ? current.filter(v => v !== newValue)
-        : [...current, newValue];
-
-      setSearchParams(prev => {
-        prev.set('page', 1);
-        updated.length ? prev.set(paramName, updated.join(',')) : prev.delete(paramName);
-        return prev;
-      });
-    }
-  }
-
   function handleSearch(e) {
     setSearchQuery(e.target.value);
   }
@@ -175,16 +119,7 @@ export default function QuestionProvider({children}) {
   return (
     <QuestionContext.Provider value={{
       questions,
-      page,
       totalPages,
-      handleNextPage,
-      handlePrevPage,
-      handlePageClick,
-      selectedSpecialization,
-      selectedSkills,
-      selectedRate,
-      selectedComplexity,
-      handleFilterChange,
       searchQuery,
       handleSearch,
       isLoading,

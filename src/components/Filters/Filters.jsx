@@ -2,10 +2,9 @@ import Search from "../Search/Search.jsx";
 import Filter from "../Filter/Filter.jsx";
 
 import './filters.scss'
-import {useContext} from "react";
-import {QuestionContext} from "../../context/QuestionContext.jsx";
 import {useGetSkillsQuery, useGetSpecializationsQuery} from "../../services/questionsApi.js";
 import {complexityData, rateData, statusData} from "../../constants/questionFilters.js";
+import useQuestionParams from "../../hooks/useQuestionParams.js";
 
 export default function Filters({onClose}) {
   const {
@@ -13,7 +12,7 @@ export default function Filters({onClose}) {
     selectedSkills,
     selectedRate,
     selectedComplexity,
-  } = useContext(QuestionContext);
+  } = useQuestionParams();
 
   const {data: specializations = []} = useGetSpecializationsQuery();
   const {data: skills = []} = useGetSkillsQuery();
