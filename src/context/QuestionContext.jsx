@@ -6,8 +6,6 @@ import {useSearchParams} from "react-router-dom";
 
 export const QuestionContext = createContext(null);
 
-const specializationUrl = "/specializations?limit=15"; //Специализация
-const skillsUrl = "/skills?limit=10"; // Навыки
 const questionsUrl = "/questions/public-questions";
 
 const rateData = [
@@ -75,8 +73,6 @@ export default function QuestionProvider({children}) {
 
   const [questions, setQuestions] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
-  const [specializations, setSpecializations] = useState([]);
-  const [skills, setSkills] = useState([]);
   const [searchQuery, setSearchQuery] = useState(() => params.get('search') || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -98,35 +94,6 @@ export default function QuestionProvider({children}) {
   const limit = 10
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const prevSearchQuery = useRef(debouncedSearchQuery);
-
-  // Фильтры
-  useEffect(() => {
-    async function fetchFiltersData() {
-      try {
-        const specializationsPromise = api.get(specializationUrl);
-        const skillsPromise = api.get(skillsUrl);
-
-
-        const [{data: specializations}, {data: skills}] =
-          await Promise.all([
-            specializationsPromise,
-            skillsPromise
-          ])
-
-        setSpecializations(specializations.data)
-        setSkills(skills.data)
-
-
-      } catch (error) {
-        console.log(error.message)
-
-      } finally {
-        // console.log('загрузка завершена')
-      }
-    }
-
-    fetchFiltersData()
-  }, []);
 
   // Вопросы
   useEffect(() => {
@@ -186,6 +153,8 @@ export default function QuestionProvider({children}) {
         setError(null);
         setQuestions([]);
         const {data: result} = await api.get(`${questionsUrl}?${searchParams}`, {signal});
+
+        console.log(result)
 
         setQuestions(result.data)
         setTotalPages(Math.ceil(result.total / limit))
@@ -271,9 +240,7 @@ export default function QuestionProvider({children}) {
       handleNextPage,
       handlePrevPage,
       handlePageClick,
-      specializations,
       selectedSpecialization,
-      skills,
       selectedSkills,
       statusData,
       rateData,

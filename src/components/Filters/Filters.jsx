@@ -4,12 +4,11 @@ import Filter from "../Filter/Filter.jsx";
 import './filters.scss'
 import {useContext} from "react";
 import {QuestionContext} from "../../context/QuestionContext.jsx";
+import {useGetSkillsQuery, useGetSpecializationsQuery} from "../../services/questionsApi.js";
 
 export default function Filters({onClose}) {
   const {
-    specializations,
     selectedSpecialization,
-    skills,
     selectedSkills,
     statusData,
     rateData,
@@ -17,6 +16,9 @@ export default function Filters({onClose}) {
     complexityData,
     selectedComplexity,
   } = useContext(QuestionContext);
+
+  const {data: specializations = []} = useGetSpecializationsQuery();
+  const {data: skills = []} = useGetSkillsQuery();
 
   return (
     <div className="filters">
@@ -50,7 +52,6 @@ export default function Filters({onClose}) {
       <div className="filters__item">
         <Filter filterName={'Статус (заблокировано)'} filterItems={statusData} selectedItem={2} className={'_disabled'}/>
       </div>
-
     </div>
   )
 }
