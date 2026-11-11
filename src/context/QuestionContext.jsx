@@ -3,7 +3,6 @@ import {api} from "../api.js";
 import axios from "axios";
 import {complexityData} from "../constants/questionFilters.js";
 import useQuestionParams from "../hooks/useQuestionParams.js";
-import useQuestionSearch from "../hooks/useQuestionSearch.js";
 
 export const QuestionContext = createContext(null);
 
@@ -12,17 +11,12 @@ const questionsUrl = "/questions/public-questions";
 export default function QuestionProvider({children}) {
   const {
     page,
+    appliedSearch,
     selectedSpecialization,
     selectedSkills,
     selectedRate,
     selectedComplexity,
   } = useQuestionParams();
-
-  const {
-    searchQuery,
-    handleSearch,
-    debouncedSearchQuery
-  } = useQuestionSearch()
 
   const [questions, setQuestions] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
@@ -63,8 +57,8 @@ export default function QuestionProvider({children}) {
         searchParams.set('complexity', convertComplexityParams.join(','))
       }
 
-      if (debouncedSearchQuery.trim()) {
-        searchParams.set('titleOrDescription', debouncedSearchQuery.trim())
+      if (appliedSearch.trim()) {
+        searchParams.set('titleOrDescription', appliedSearch.trim())
       }
 
       try {
@@ -94,12 +88,10 @@ export default function QuestionProvider({children}) {
     return () => {
       controller.abort();
     }
-  }, [page, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate,debouncedSearchQuery])
+  }, [page, selectedSpecialization, selectedSkills, selectedComplexity, selectedRate, appliedSearch])
 
   return (
     <QuestionContext.Provider value={{
-      searchQuery,
-      handleSearch,
       questions,
       totalPages,
       isLoading,

@@ -13,11 +13,11 @@ export default function useQuestionParams() {
   }
 
   const page = params.get('page') || '1';
+  const appliedSearch = params.get('search')  || '';
   const selectedSpecialization = params.get('specializationId') || '';
   const selectedSkills = useMemo(() => getArrayParam(params, 'skills'), [params]);
   const selectedRate = useMemo(() => getArrayParam(params, 'rate'), [params]);
   const selectedComplexity = useMemo(() => getArrayParam(params, 'complexity'), [params]);
-
 
   function handleFilterChange(newValue, paramName, multiple) {
     if (!multiple) {
@@ -72,6 +72,7 @@ export default function useQuestionParams() {
     params,
     setSearchParams,
     page,
+    appliedSearch,
     selectedSpecialization,
     selectedSkills,
     selectedRate,

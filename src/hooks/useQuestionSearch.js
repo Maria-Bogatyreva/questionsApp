@@ -12,6 +12,7 @@ export default function useQuestionSearch() {
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const prevSearchQuery = useRef(debouncedSearchQuery);
+
   useEffect(() => {
     const isSearchChanged =
       prevSearchQuery.current !== debouncedSearchQuery;
@@ -34,7 +35,6 @@ export default function useQuestionSearch() {
 
   return {
     searchQuery,
-    handleSearch,
-    debouncedSearchQuery
+    handleSearch
   }
 }
