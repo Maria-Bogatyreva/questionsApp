@@ -1,4 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import {complexityData} from "../constants/questionFilters.js";
 
 export const apiSlice = createApi({
   reducerPath: 'questionsApi',
@@ -12,8 +13,54 @@ export const apiSlice = createApi({
       query: () => 'skills?limit=10', // эндпоинт для получения ВСЕХ навыков
       transformResponse: response => response.data
     }),
+    getQuestions: builder.query({
+      query: (params) =>  {
+        const {
+          page,
+          limit,
+          appliedSearch,
+          selectedSpecialization,
+          selectedSkills,
+          selectedRate,
+          selectedComplexity
+        } = params;
+        const searchParams = new URLSearchParams({limit: limit, page: page})
+
+        if (selectedSpecialization) {
+          searchParams.set('specializationId', selectedSpecialization)
+        }
+
+        if (selectedSkills.length) {
+          searchParams.set('skills', selectedSkills.join(','))
+        }
+
+        if (selectedRate.length) {
+          searchParams.set('rate', selectedRate.join(','))
+        }
+
+        if (selectedComplexity.length) {
+          const convertComplexityParams =
+            complexityData.filter(i => selectedComplexity.includes(i.id))
+              .reduce((acc, element) => {
+                acc.push(element.values);
+                return acc
+              }, [])
+              .flat()
+          searchParams.set('complexity', convertComplexityParams.join(','))
+        }
+
+        if (appliedSearch.trim()) {
+          searchParams.set('titleOrDescription', appliedSearch.trim())
+        }
+        return {
+          url: '/questions/public-questions',
+          params: searchParams
+        }
+      }
+
+    })
   })
 })
 
 // экспорт хуков для использования в компонентах
-export const {useGetSpecializationsQuery, useGetSkillsQuery} = apiSlice;
+export const {useGetSpecializationsQuery, useGetSkillsQuery, useGetQuestionsQuery} = apiSlice;

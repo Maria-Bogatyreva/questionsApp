@@ -58,3 +58,5 @@ export const statusData = [
   }
 ]
 
+export const limit = 10
+

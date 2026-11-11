@@ -1,13 +1,13 @@
 import './questionsPage.scss'
 import Questions from "../../components/Questions/Questions.jsx";
 import Filters from "../../components/Filters/Filters.jsx";
-import {QuestionContext} from "../../context/QuestionContext.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
-import {useContext, useState} from "react";
 import Skeleton from "../../components/Skeleton/Skeleton.jsx";
+import useQuestions from "../../hooks/useQuestions.js";
+import {useState} from "react";
 
 export default function QuestionsPage() {
-  const {isLoading} = useContext(QuestionContext);
+  const {isLoading} = useQuestions();
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   function toggleFiltersOpen () {
