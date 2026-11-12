@@ -1,6 +1,6 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import './question.scss'
-import {handleImgFailed} from "../../utils.js";
+import {handleImgFailed} from "../../utils.ts";
 import DOMPurify from "dompurify";
 import {useLayoutEffect, useRef, useState} from "react";
 import {useGetQuestionQuery} from "../../services/questionsApi.js";

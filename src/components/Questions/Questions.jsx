@@ -1,7 +1,7 @@
 import './questions.scss'
 import QuestionCard from "../QuestionCard/QuestionCard.jsx";
 import {useGetSpecializationsQuery} from "../../services/questionsApi.js";
-import useQuestionParams from "../../hooks/useQuestionParams.js";
+import useQuestionParams from "../../hooks/useQuestionParams.ts";
 import useQuestions from "../../hooks/useQuestions.js";
 export default function Questions() {
   const {data: specializations = []} = useGetSpecializationsQuery();

@@ -1,7 +1,7 @@
 import './pagination.scss'
-import useQuestionParams from "../../hooks/useQuestionParams.js";
+import useQuestionParams from "../../hooks/useQuestionParams.ts";
 import useQuestions from "../../hooks/useQuestions.js";
-import {limit} from "../../constants/questionFilters.js";
+import {limit} from "../../constants/questionFilters.ts";
 
 export default function Pagination() {
   const {page, handleNextPage, handlePrevPage, handlePageClick} = useQuestionParams();

@@ -20,7 +20,7 @@ export const rateData = [
     title: '5'
   }
 ]
-export const complexityData = [
+export const complexityData= [
   {
     id: 0,
     values: [1, 2, 3],

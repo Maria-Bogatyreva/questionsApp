@@ -1,12 +1,14 @@
-import useQuestionParams from "./useQuestionParams.js";
+import useQuestionParams from "./useQuestionParams.ts";
 import {useEffect, useRef, useState} from "react";
-import useDebounce from "./useDebounce.jsx";
+import useDebounce from "./useDebounce.ts";
+import {type ChangeEvent} from "react";
+
 
 export default function useQuestionSearch() {
   const {params, setSearchParams} = useQuestionParams();
   const [searchQuery, setSearchQuery] = useState(() => params.get('search') || '');
 
-  function handleSearch(e) {
+  function handleSearch(e: ChangeEvent<HTMLInputElement>) {
     setSearchQuery(e.target.value);
   }
 
@@ -20,7 +22,7 @@ export default function useQuestionSearch() {
     if (isSearchChanged) {
       prevSearchQuery.current = debouncedSearchQuery;
       setSearchParams(prev => {
-        prev.set('page', 1);
+        prev.set('page', '1');
 
         if (debouncedSearchQuery.trim().length) {
           prev.set('search', debouncedSearchQuery);

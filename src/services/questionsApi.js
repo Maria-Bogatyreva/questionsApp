@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {complexityData} from "../constants/questionFilters.js";
+import {complexityData} from "../constants/questionFilters.ts";
 
 export const apiSlice = createApi({
   reducerPath: 'questionsApi',

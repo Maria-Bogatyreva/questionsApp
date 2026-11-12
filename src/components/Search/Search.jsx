@@ -1,5 +1,5 @@
 import './search.scss'
-import useQuestionSearch from "../../hooks/useQuestionSearch.js";
+import useQuestionSearch from "../../hooks/useQuestionSearch.ts";
 
 export default function Search() {
   const {searchQuery, handleSearch} = useQuestionSearch();

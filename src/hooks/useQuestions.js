@@ -1,6 +1,6 @@
-import useQuestionParams from "./useQuestionParams.js";
+import useQuestionParams from "./useQuestionParams.ts";
 import {useGetQuestionsQuery} from "../services/questionsApi.js";
-import {limit} from "../constants/questionFilters.js";
+import {limit} from "../constants/questionFilters.ts";
 
 export default function useQuestions() {
   const {page, selectedSpecialization, appliedSearch, selectedSkills, selectedRate, selectedComplexity} = useQuestionParams();

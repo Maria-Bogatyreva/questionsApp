@@ -3,8 +3,8 @@ import Filter from "../Filter/Filter.jsx";
 
 import './filters.scss'
 import {useGetSkillsQuery, useGetSpecializationsQuery} from "../../services/questionsApi.js";
-import {complexityData, rateData, statusData} from "../../constants/questionFilters.js";
-import useQuestionParams from "../../hooks/useQuestionParams.js";
+import {complexityData, rateData, statusData} from "../../constants/questionFilters.ts";
+import useQuestionParams from "../../hooks/useQuestionParams.ts";
 
 export default function Filters({onClose}) {
   const {

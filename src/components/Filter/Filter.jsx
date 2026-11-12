@@ -1,7 +1,7 @@
 import './filter.scss'
 import {useState} from "react";
-import {handleImgFailed} from "../../utils.js";
-import useQuestionParams from "../../hooks/useQuestionParams.js";
+import {handleImgFailed} from "../../utils.ts";
+import useQuestionParams from "../../hooks/useQuestionParams.ts";
 
 export default function Filter({filterName, filterItems=[], selectedItem, hasIcon= false, multiple, filterParam, className=''
 }) {
