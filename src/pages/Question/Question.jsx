@@ -31,8 +31,8 @@ export default function Question() {
 
   }, [id, question]);
 
-  if (error) return <i>Ошибка</i>
-  if (!question) return <p>Загрузка...</p>
+  if (error) return <div className="container">Ошибка</div>
+  if (!question) return <div className="container">Загрузка...</div>
 
   return (
     <main className="question">
