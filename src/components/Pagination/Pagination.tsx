@@ -12,8 +12,8 @@ export default function Pagination() {
   if (!totalPages) return null;
 
   function paginationTemplate(
-    page,
-    totalPages,
+    page: number,
+    totalPages: number,
     siblingCount = 1,
     edgePageCount = 6
   ) {
@@ -56,7 +56,7 @@ export default function Pagination() {
     const showLeftDots = finalLeftBound > 2;
     const showRightDots = finalRightBound < totalPages - 1;
 
-    const result = [1];
+    const result: (number | '...')[] = [1];
 
     if (showLeftDots) {
       result.push("...");
@@ -97,7 +97,7 @@ export default function Pagination() {
 
   return (
     <div className="pagination">
-      {page > 1 &&
+      {+page > 1 &&
         <a href="#!" onClick={handlePrevPage} className="pagination__btn">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="27" height="27" rx="13.5" stroke="currentColor"/>
@@ -125,7 +125,7 @@ export default function Pagination() {
 
       </div>
       {
-        page < totalPages &&
+        +page < totalPages &&
         <a href="#!" onClick={handleNextPage} className="pagination__btn">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="-0.5" width="27" height="27" rx="13.5"

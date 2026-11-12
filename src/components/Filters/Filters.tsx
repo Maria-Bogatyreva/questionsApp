@@ -1,12 +1,15 @@
 import Search from "../Search/Search.tsx";
-import Filter from "../Filter/Filter.jsx";
+import Filter from "../Filter/Filter.tsx";
 
 import './filters.scss'
 import {useGetSkillsQuery, useGetSpecializationsQuery} from "../../services/questionsApi.ts";
 import {complexityData, rateData, statusData} from "../../constants/questionFilters.ts";
 import useQuestionParams from "../../hooks/useQuestionParams.ts";
 
-export default function Filters({onClose}) {
+interface FiltersProps {
+  onClose: () => void;
+}
+export default function Filters({onClose} : FiltersProps) {
   const {
     selectedSpecialization,
     selectedSkills,

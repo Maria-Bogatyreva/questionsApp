@@ -1,5 +1,5 @@
 import './questions.scss'
-import QuestionCard from "../QuestionCard/QuestionCard.jsx";
+import QuestionCard from "../QuestionCard/QuestionCard.tsx";
 import {useGetSpecializationsQuery} from "../../services/questionsApi.ts";
 import useQuestionParams from "../../hooks/useQuestionParams.ts";
 import useQuestions from "../../hooks/useQuestions.ts";

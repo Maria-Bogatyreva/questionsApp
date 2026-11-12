@@ -1,9 +1,9 @@
 import {createBrowserRouter} from "react-router-dom";
-import Layout from "./components/Layout.jsx";
+import Layout from "./components/Layout.tsx";
 import QuestionsPage from "./pages/QuestionsPage/QuestionsPage.jsx";
 import NotFound from "./pages/NotFound/NotFound.jsx";
 import Question from "./pages/Question/Question.jsx";
-import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.tsx";
 
 export const router = createBrowserRouter([
   {

@@ -2,8 +2,12 @@ import './questionCard.scss'
 import {useState} from "react";
 import DOMPurify from 'dompurify';
 import {Link} from "react-router-dom";
+import type {Question} from "../../services/questionsApi.types.ts";
 
-export default function QuestionCard({question}) {
+interface QuestionCardProps {
+  question: Question;
+}
+export default function QuestionCard({question} : QuestionCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className={`question-card ${isOpen ? 'open' : ''}`}>

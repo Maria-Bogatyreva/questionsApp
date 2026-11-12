@@ -2,7 +2,7 @@ import {useSearchParams} from "react-router-dom";
 import {useMemo, type MouseEvent} from "react";
 
 
-type AllowedParamName = 'skills' | 'rate' | 'complexity';
+export type AllowedParamName = 'skills' | 'rate' | 'complexity';
 
 export default function useQuestionParams() {
   const [params, setSearchParams] = useSearchParams();
