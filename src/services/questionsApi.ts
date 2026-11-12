@@ -1,19 +1,20 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {complexityData} from "../constants/questionFilters.ts";
+import type {Skill, Specialization, PaginatedResponse, Question, QuestionsQueryParams} from "./questionsApi.types.ts";
 
 export const apiSlice = createApi({
   reducerPath: 'questionsApi',
   baseQuery: fetchBaseQuery({baseUrl:'https://api.yeatwork.ru/', timeout: 5000}),
   endpoints: (builder) => ({
-    getSpecializations: builder.query({
+    getSpecializations: builder.query<Specialization[], void>({
       query: () => 'specializations?limit=15', // эндпоинт для получения ВСЕХ специализаций
-      transformResponse: response => response.data
+      transformResponse: (response: PaginatedResponse<Specialization>) => response.data
     }),
-    getSkills: builder.query({
+    getSkills: builder.query<Skill[], void>({
       query: () => 'skills?limit=10', // эндпоинт для получения ВСЕХ навыков
-      transformResponse: response => response.data
+      transformResponse: (response: PaginatedResponse<Skill>) => response.data
     }),
-    getQuestions: builder.query({
+    getQuestions: builder.query<PaginatedResponse<Question>, QuestionsQueryParams>({
       query: (params) =>  {
         const {
           page,
@@ -24,7 +25,7 @@ export const apiSlice = createApi({
           selectedRate,
           selectedComplexity
         } = params;
-        const searchParams = new URLSearchParams({limit: limit, page: page})
+        const searchParams = new URLSearchParams({limit: limit.toString(), page: page})
 
         if (selectedSpecialization) {
           searchParams.set('specializationId', selectedSpecialization)
@@ -41,7 +42,7 @@ export const apiSlice = createApi({
         if (selectedComplexity.length) {
           const convertComplexityParams =
             complexityData.filter(i => selectedComplexity.includes(i.id))
-              .reduce((acc, element) => {
+              .reduce((acc: number[][], element) => {
                 acc.push(element.values);
                 return acc
               }, [])

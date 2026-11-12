@@ -1,5 +1,5 @@
 import useQuestionParams from "./useQuestionParams.ts";
-import {useGetQuestionsQuery} from "../services/questionsApi.js";
+import {useGetQuestionsQuery} from "../services/questionsApi.ts";
 import {limit} from "../constants/questionFilters.ts";
 
 export default function useQuestions() {

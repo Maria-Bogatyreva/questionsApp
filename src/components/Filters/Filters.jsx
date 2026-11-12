@@ -1,8 +1,8 @@
-import Search from "../Search/Search.jsx";
+import Search from "../Search/Search.tsx";
 import Filter from "../Filter/Filter.jsx";
 
 import './filters.scss'
-import {useGetSkillsQuery, useGetSpecializationsQuery} from "../../services/questionsApi.js";
+import {useGetSkillsQuery, useGetSpecializationsQuery} from "../../services/questionsApi.ts";
 import {complexityData, rateData, statusData} from "../../constants/questionFilters.ts";
 import useQuestionParams from "../../hooks/useQuestionParams.ts";
 

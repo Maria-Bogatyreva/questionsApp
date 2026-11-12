@@ -3,7 +3,7 @@ import './question.scss'
 import {handleImgFailed} from "../../utils.ts";
 import DOMPurify from "dompurify";
 import {useLayoutEffect, useRef, useState} from "react";
-import {useGetQuestionQuery} from "../../services/questionsApi.js";
+import {useGetQuestionQuery} from "../../services/questionsApi.ts";
 
 export default function Question() {
   const navigate = useNavigate();

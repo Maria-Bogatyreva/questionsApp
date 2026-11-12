@@ -3,7 +3,7 @@ import Questions from "../../components/Questions/Questions.jsx";
 import Filters from "../../components/Filters/Filters.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
 import Skeleton from "../../components/Skeleton/Skeleton.jsx";
-import useQuestions from "../../hooks/useQuestions.js";
+import useQuestions from "../../hooks/useQuestions.ts";
 import {useState} from "react";
 
 export default function QuestionsPage() {
