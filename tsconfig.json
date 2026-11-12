@@ -7,8 +7,6 @@
     "skipLibCheck": true,
     "strict": true,
     "isolatedModules": true,
-    "allowJs": true,
-    "checkJs": false,
     "jsx": "react-jsx",
 
     /* Bundler mode */

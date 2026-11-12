@@ -9,12 +9,19 @@ export interface Skill {
   imageSrc: string | null;
 }
 
-export interface Question {
+export interface QuestionItem {
   id: number;
   complexity: number;
   title: string;
   rate: number;
   shortAnswer: string;
+}
+
+export interface Question extends QuestionItem {
+  description: string;
+  imageSrc: string | null;
+  longAnswer: string;
+  questionSkills: Skill[];
 }
 
 export interface QuestionsQueryParams {

@@ -1,8 +1,8 @@
 import './questionsPage.scss'
-import Questions from "../../components/Questions/Questions.jsx";
-import Filters from "../../components/Filters/Filters.jsx";
-import Pagination from "../../components/Pagination/Pagination.jsx";
-import Skeleton from "../../components/Skeleton/Skeleton.jsx";
+import Questions from "../../components/Questions/Questions.tsx";
+import Filters from "../../components/Filters/Filters.tsx";
+import Pagination from "../../components/Pagination/Pagination.tsx";
+import Skeleton from "../../components/Skeleton/Skeleton.tsx";
 import useQuestions from "../../hooks/useQuestions.ts";
 import {useState} from "react";
 

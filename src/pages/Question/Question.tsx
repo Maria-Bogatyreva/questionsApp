@@ -4,22 +4,22 @@ import {handleImgFailed} from "../../utils.ts";
 import DOMPurify from "dompurify";
 import {useLayoutEffect, useRef, useState} from "react";
 import {useGetQuestionQuery} from "../../services/questionsApi.ts";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 export default function Question() {
   const navigate = useNavigate();
   const {id} = useParams();
-  const {currentData: question, error} = useGetQuestionQuery(id);
+  const {currentData: question, error} = useGetQuestionQuery(id ?? skipToken);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLongAnswer, setIsLongAnswer] = useState(false);
   const fallbackSrc = '/images/questionImg.jpg';
-
   const [isInfoOpen, setIsInfoOpen] = useState(false)
 
   function toggleInfoOpen() {
     setIsInfoOpen(prev => !prev)
   }
 
-  const longAnswerRef = useRef(null);
+  const longAnswerRef  = useRef<HTMLDivElement | null>(null);
 
   useLayoutEffect(() => {
 
@@ -31,8 +31,10 @@ export default function Question() {
 
   }, [id, question]);
 
+  if (!id) return <div className="container">Некорректный адрес...</div>
   if (error) return <div className="container">Ошибка</div>
   if (!question) return <div className="container">Загрузка...</div>
+
 
   return (
     <main className="question">
@@ -148,7 +150,7 @@ export default function Question() {
                   {
                     question.questionSkills.map(skill => (
                       <li key={skill.id}>
-                        <img alt="" src={skill.imageSrc} onError={(e) => handleImgFailed(e, '/images/skillImg.png')}/>
+                        <img alt="" src={skill.imageSrc  ?? '/images/skillImg.png'} onError={(e) => handleImgFailed(e, '/images/skillImg.png')}/>
                         {skill.title}
                       </li>))
                   }
@@ -157,13 +159,12 @@ export default function Question() {
               <div className="question__info-item">
                 <div className="question__info-title">Ключевые слова</div>
                 <ul className="question__info-keywords">
-                  <Link>#Ключевое слово 1</Link>
-                  <Link>#Ключевое слово 2</Link>
-                  <Link>#Ключевое слово 3</Link>
-
+                  <li><a>#Ключевое слово 1</a></li>
+                  <li><a>#Ключевое слово 2</a></li>
+                  <li><a>#Ключевое слово 3</a></li>
                 </ul>
               </div>
-              <div className="question__info-item"><small>Автор: <Link>Дмитрий Мусиенко</Link></small></div>
+              <div className="question__info-item"><small>Автор: <a>Дмитрий Мусиенко</a></small></div>
             </div>
             <aside className="question__info-inner question__blockquote">
               <div className="question__blockquote-author">

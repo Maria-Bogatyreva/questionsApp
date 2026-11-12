@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {complexityData} from "../constants/questionFilters.ts";
-import type {Skill, Specialization, PaginatedResponse, Question, QuestionsQueryParams} from "./questionsApi.types.ts";
+import type {Skill, Specialization, PaginatedResponse, Question, QuestionItem, QuestionsQueryParams} from "./questionsApi.types.ts";
 
 export const apiSlice = createApi({
   reducerPath: 'questionsApi',
@@ -14,7 +14,7 @@ export const apiSlice = createApi({
       query: () => 'skills?limit=10', // эндпоинт для получения ВСЕХ навыков
       transformResponse: (response: PaginatedResponse<Skill>) => response.data
     }),
-    getQuestions: builder.query<PaginatedResponse<Question>, QuestionsQueryParams>({
+    getQuestions: builder.query<PaginatedResponse<QuestionItem>, QuestionsQueryParams>({
       query: (params) =>  {
         const {
           page,
@@ -60,7 +60,7 @@ export const apiSlice = createApi({
       }
 
     }),
-    getQuestion: builder.query({
+    getQuestion: builder.query<Question, string>({
       query: (id) => `/questions/public-questions/${id}`, // эндпоинт для получения одного вопроса
     }),
   })
