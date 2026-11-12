@@ -1,19 +1,14 @@
-import {Link, useLoaderData, useNavigate, useParams} from "react-router-dom";
-import {api} from "../../api.js";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import './question.scss'
 import {handleImgFailed} from "../../utils.js";
 import DOMPurify from "dompurify";
 import {useLayoutEffect, useRef, useState} from "react";
-
-export async function loaderQuestion({params}) {
-  const data = await api.get(`/questions/public-questions/${params.id}`)
-  return data.data
-}
+import {useGetQuestionQuery} from "../../services/questionsApi.js";
 
 export default function Question() {
-  const question = useLoaderData();
   const navigate = useNavigate();
   const {id} = useParams();
+  const {currentData: question, error} = useGetQuestionQuery(id);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLongAnswer, setIsLongAnswer] = useState(false);
   const fallbackSrc = '/images/questionImg.jpg';
@@ -27,10 +22,17 @@ export default function Question() {
   const longAnswerRef = useRef(null);
 
   useLayoutEffect(() => {
-    const isLong = longAnswerRef.current.offsetHeight > 400;
-    setIsCollapsed(isLong);
-    setIsLongAnswer(isLong);
-  }, [id]);
+
+    if (longAnswerRef.current) {
+      const isLong = longAnswerRef.current.offsetHeight > 400;
+      setIsCollapsed(isLong);
+      setIsLongAnswer(isLong);
+    }
+
+  }, [id, question]);
+
+  if (error) return <i>Ошибка</i>
+  if (!question) return <p>Загрузка...</p>
 
   return (
     <main className="question">
@@ -110,7 +112,6 @@ export default function Question() {
           </div>
 
           <div className="question__info">
-
             <div className={`question__info-inner question__information trs ${isInfoOpen ? '_open' : ''}`}>
               <div className="question__info-close _tablet _mob" onClick={toggleInfoOpen}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

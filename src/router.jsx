@@ -2,7 +2,7 @@ import {createBrowserRouter} from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import QuestionsPage from "./pages/QuestionsPage/QuestionsPage.jsx";
 import NotFound from "./pages/NotFound/NotFound.jsx";
-import Question, {loaderQuestion} from "./pages/Question/Question.jsx";
+import Question from "./pages/Question/Question.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 export const router = createBrowserRouter([
@@ -19,9 +19,7 @@ export const router = createBrowserRouter([
       {
         path: 'questions/:id',
         element: <Question />,
-        ErrorBoundary: ErrorBoundary,
-        loader: loaderQuestion
-
+        ErrorBoundary: ErrorBoundary
       },
       {
         path: '*',

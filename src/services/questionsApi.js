@@ -58,9 +58,12 @@ export const apiSlice = createApi({
         }
       }
 
-    })
+    }),
+    getQuestion: builder.query({
+      query: (id) => `/questions/public-questions/${id}`, // эндпоинт для получения одного вопроса
+    }),
   })
 })
 
 // экспорт хуков для использования в компонентах
-export const {useGetSpecializationsQuery, useGetSkillsQuery, useGetQuestionsQuery} = apiSlice;
+export const {useGetSpecializationsQuery, useGetSkillsQuery, useGetQuestionsQuery, useGetQuestionQuery} = apiSlice;
